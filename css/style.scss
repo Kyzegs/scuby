@@ -241,6 +241,11 @@ body {
     .hl {
         color: var(--hl-colour);
     }
+
+    #skin-display {
+        display: flex;
+        justify-content: center;
+    }
 }
 
 @media screen and (max-width: 768px) {

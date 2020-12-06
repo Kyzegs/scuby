@@ -235,6 +235,15 @@ body {
   color: var(--hl-colour);
 }
 
+#wrapper #skin-display {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
 @media screen and (max-width: 768px) {
   #wrapper #content-wrapper h1, #wrapper #content-wrapper h3, #wrapper #content-wrapper p {
     margin-left: 2em;

@@ -39,6 +39,10 @@ $categories = [
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/94/three.min.js"
+        integrity="sha256-NGC9JEuTWN4GhTj091wctgjzftr+8WNDmw0H8J5YPYE="
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/InventivetalentDev/MineRender@1.2.3/dist/skin.min.js"></script>
     <script src="js/script.js"></script>
     <title><?= end(MojangAPI::getNameHistory($uuid))['name']; ?></title>
 </head>
@@ -63,6 +67,7 @@ $categories = [
                 <div class="trans-bot"></div>
             </div>
             <div class="content">
+                <div id="skin-display"></div>
                 <h1>STATISTICS</h1>
                 <?php if (! in_array(true, array_map('boolval', array_values($stats)))): ?>
                     <h3 class="center">None<h3>
@@ -150,5 +155,18 @@ $categories = [
             </div>
         </div>
     </div>
+    <script>
+        new SkinRender({
+            render: {
+                taa: true
+            },
+            canvas: {
+                width: 320,
+                height: 400
+            },
+        }, document.getElementById('skin-display')).render({
+            uuid: '<?= $uuid; ?>'
+        });
+    </script>
 </body>
 </html>
