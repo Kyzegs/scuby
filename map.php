@@ -1,6 +1,6 @@
 <html lang="en">
 <head>
-    <?php require_once('includes/head.php'); ?>
+    <?php require_once 'includes/head.php'; ?>
     <title>Map</title>
 </head>
 <body>
@@ -27,7 +27,7 @@
                 <iframe id="map" src="http://play.scuby.online:8123/" frameborder="0"></iframe>
             </div>
         </div>
-        <?php require_once('includes/footer.php'); ?>
+        <?php require_once 'includes/footer.php'; ?>
     </div>
 </body>
 </html>

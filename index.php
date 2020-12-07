@@ -1,6 +1,6 @@
 <html lang="en">
 <head>
-    <?php require_once('includes/head.php'); ?>
+    <?php require_once 'includes/head.php'; ?>
     <title>Home</title>
 </head>
 <body>
@@ -69,7 +69,7 @@
                 </p>
             </div>
         </div>
-        <?php require_once('includes/footer.php'); ?>
+        <?php require_once 'includes/footer.php'; ?>
     </div>
 </body>
 </html>

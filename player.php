@@ -1,28 +1,28 @@
 <?php
-if (! $_GET['uuid'] || ! file_exists(sprintf('stats/%s.json', $_GET['uuid']))) {
+if (!$_GET['uuid'] || !file_exists(sprintf('stats/%s.json', $_GET['uuid']))) {
     header('location: players.php');
     exit;
-} 
+}
 
 session_start();
-require_once('includes/mojang-api.php');
+require_once 'includes/mojang-api.php';
 
 $uuid = $_GET['uuid'];
 $stats = json_decode(file_get_contents(sprintf('stats/%s.json', $uuid)), true)['stats'];
 $categories = [
-    'dropped' => 'item',
-    'killed' => 'mob',
-    'broken' => 'item',
+    'dropped'   => 'item',
+    'killed'    => 'mob',
+    'broken'    => 'item',
     'picked_up' => 'item',
-    'used' => 'item',
-    'crafted' => 'item',
-    'mined' => 'item',
-    'custom' => 'custom',
+    'used'      => 'item',
+    'crafted'   => 'item',
+    'mined'     => 'item',
+    'custom'    => 'custom',
 ];
 ?>
 <html lang="en">
 <head>
-    <?php require_once('includes/head.php'); ?>
+    <?php require_once 'includes/head.php'; ?>
     <title><?= end(MojangAPI::getNameHistory($uuid))['name']; ?></title>
 </head>
 <body>
@@ -48,11 +48,11 @@ $categories = [
             <div class="content">
                 <div id="skin-display"></div>
                 <h1>STATISTICS</h1>
-                <?php if (! in_array(true, array_map('boolval', array_values($stats)))): ?>
+                <?php if (!in_array(true, array_map('boolval', array_values($stats)))) { ?>
                     <h3 class="center">None<h3>
-                <?php endif; ?>
-                <?php foreach($categories as $category => $type): ?>
-                    <?php if (! empty($stats['minecraft:'.$category])): ?>
+                <?php } ?>
+                <?php foreach ($categories as $category => $type) { ?>
+                    <?php if (!empty($stats['minecraft:'.$category])) { ?>
                         <h3 class="center"><?= strtoupper($category) ?></h3>
                         <table class="stats-table">
                             <thead>
@@ -62,24 +62,24 @@ $categories = [
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach($stats['minecraft:'.$category] as $object => $amount): ?>
+                                <?php foreach ($stats['minecraft:'.$category] as $object => $amount) { ?>
                                     <?php
                                     $object = str_replace('minecraft:', '', $object);
                                     $object_name = ucwords(str_replace('_', ' ', $object));
-                                    
+
                                     if ($type === 'item') {
                                         if (file_exists("images/blocks/$object.png")) {
                                             $path = "images/blocks/$object.png";
-                                        } else if (file_exists("images/items/$object.png")) {
+                                        } elseif (file_exists("images/items/$object.png")) {
                                             $path = "images/items/$object.png";
                                         } else {
-                                            $path = "images/blocks/missing_texture_block.png";
-                                        }   
+                                            $path = 'images/blocks/missing_texture_block.png';
+                                        }
                                     } elseif ($type === 'mob') {
                                         if (file_exists("images/mobs/$object.png")) {
                                             $path = "images/mobs/$object.png";
                                         } else {
-                                            $path = "images/blocks/missing_texture_block.png";
+                                            $path = 'images/blocks/missing_texture_block.png';
                                         }
                                     }
                                     ?>
@@ -88,14 +88,14 @@ $categories = [
                                         <td><?= $object_name ?></td>
                                         <td><?= $amount ?></td>
                                     </tr>
-                                <?php endforeach; ?>
+                                <?php } ?>
                             </tbody>
                         </table>
-                    <?php endif; ?>
-                <?php endforeach; ?>
+                    <?php } ?>
+                <?php } ?>
             </div>
         </div>
-        <?php require_once('includes/footer.php'); ?>
+        <?php require_once 'includes/footer.php'; ?>
     </div>
     <script>
         new SkinRender({

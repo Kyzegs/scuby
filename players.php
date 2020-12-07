@@ -1,10 +1,10 @@
 <?php
 session_start();
-require_once('includes/mojang-api.php');
+require_once 'includes/mojang-api.php';
 ?>
 <html lang="en">
 <head>
-    <?php require_once('includes/head.php'); ?>
+    <?php require_once 'includes/head.php'; ?>
     <title>Players</title>
 </head>
 <body>
@@ -32,7 +32,7 @@ require_once('includes/mojang-api.php');
                 foreach (glob('stats/*.json') as $filename) {
                     $uuid = str_replace(['stats/', '.json'], '', $filename);
                     $username = end(MojangAPI::getNameHistory($uuid))['name'];
-                    
+
                     $player_head = MojangAPI::embedImage(MojangAPI::getPlayerHead($uuid));
                     if ($player_head != 'data:image/png;base64,') {
                         $_SESSION['player_heads'][$username] = $player_head;
@@ -40,15 +40,15 @@ require_once('includes/mojang-api.php');
                         $player_head = $_SESSION['player_heads'][$username];
                     }
 
-                    echo("<a class=\"player-card\" href=\"player.php?uuid=$uuid\">
+                    echo "<a class=\"player-card\" href=\"player.php?uuid=$uuid\">
                             <img src=\"$player_head\" alt=\"\">
                             $username
-                        </a>");
+                        </a>";
                 }
                 ?>
             </div>
         </div>
-        <?php require_once('includes/footer.php'); ?>
+        <?php require_once 'includes/footer.php'; ?>
     </div>
 </body>
 </html>
