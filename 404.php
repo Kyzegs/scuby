@@ -1,6 +1,6 @@
 <html lang="en">
 <head>
-    <?php require_once('includes/head.php'); ?>
+    <?php require_once 'includes/head.php'; ?>
     <title>404</title>
 </head>
 <body>
@@ -28,7 +28,7 @@
                 <img id="error" src="images/sheep.gif" alt="">
             </div>
         </div>
-        <?php require_once('includes/footer.php'); ?>
+        <?php require_once 'includes/footer.php'; ?>
     </div>
 </body>
 </html>

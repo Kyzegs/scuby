@@ -1,28 +1,29 @@
 <?php
 
 /**
- * Fast and easy way to access Mojang API
+ * Fast and easy way to access Mojang API.
  *
  * Can be used to get Mojang status, UUID and username conversions, names history, and fetch skin.
  * Usually, if NULL is returned, it means empty, and FALSE means failure
  * Also, UUIDs returned are minified (without dashes)
  *
  * @author MineTheCube
+ *
  * @link https://github.com/MineTheCube/MojangAPI
  * @see http://wiki.vg/Mojang_API
  */
 class MojangAPI
 {
     /**
-     * Get Mojang status
+     * Get Mojang status.
      *
-     * @return array|bool  Array with status, FALSE on failure
+     * @return array|bool Array with status, FALSE on failure
      */
     public static function getStatus()
     {
         $json = static::fetchJson('https://status.mojang.com/check');
         if (is_array($json)) {
-            $status = array();
+            $status = [];
             foreach ($json as $array) {
                 if (!empty($array)) {
                     $key = key($array);
@@ -30,17 +31,20 @@ class MojangAPI
                     $status[$key] = $value;
                 }
             }
+
             return $status;
         }
+
         return false;
     }
 
     /**
-     * Get UUID from username, an optional time can be provided
+     * Get UUID from username, an optional time can be provided.
      *
-     * @param  string       $username
-     * @param  int          $time optional
-     * @return string|bool  UUID (without dashes) on success, FALSE on failure
+     * @param string $username
+     * @param int    $time     optional
+     *
+     * @return string|bool UUID (without dashes) on success, FALSE on failure
      */
     public static function getUuid($username, $time = 0)
     {
@@ -48,14 +52,16 @@ class MojangAPI
         if (is_array($profile) and isset($profile['id'])) {
             return $profile['id'];
         }
+
         return false;
     }
 
     /**
-     * Get username from UUID
+     * Get username from UUID.
      *
-     * @param  string       $uuid
-     * @return string|bool  Username on success, FALSE on failure
+     * @param string $uuid
+     *
+     * @return string|bool Username on success, FALSE on failure
      */
     public static function getUsername($uuid)
     {
@@ -66,47 +72,53 @@ class MojangAPI
                 return $last['name'];
             }
         }
+
         return false;
     }
 
     /**
-     * Get profile (username and UUID) from username, an optional time can be provided
+     * Get profile (username and UUID) from username, an optional time can be provided.
      *
-     * @param  string      $username
-     * @param  int         $time optional
-     * @return array|bool  Array with id and name, FALSE on failure
+     * @param string $username
+     * @param int    $time     optional
+     *
+     * @return array|bool Array with id and name, FALSE on failure
      */
     public static function getProfile($username, $time = 0)
     {
         if (static::isValidUsername($username) and is_numeric($time)) {
             return static::fetchJson(
                 'https://api.mojang.com/users/profiles/minecraft/'
-                . $username
-                . ($time > 0 ? '?at=' . $time : '')
+                .$username
+                .($time > 0 ? '?at='.$time : '')
             );
         }
+
         return false;
     }
 
     /**
-     * Get name history from UUID
+     * Get name history from UUID.
      *
-     * @param  string      $uuid
-     * @return array|bool  Array with his username's history, FALSE on failure
+     * @param string $uuid
+     *
+     * @return array|bool Array with his username's history, FALSE on failure
      */
     public static function getNameHistory($uuid)
     {
         if (static::isValidUuid($uuid)) {
-            return static::fetchJson('https://api.mojang.com/user/profiles/' . static::minifyUuid($uuid) . '/names');
+            return static::fetchJson('https://api.mojang.com/user/profiles/'.static::minifyUuid($uuid).'/names');
         }
+
         return false;
     }
 
     /**
-     * Check if string is a valid Minecraft username
+     * Check if string is a valid Minecraft username.
      *
-     * @param  string  $string to check
-     * @return bool    Whether username is valid or not
+     * @param string $string to check
+     *
+     * @return bool Whether username is valid or not
      */
     public static function isValidUsername($string)
     {
@@ -117,10 +129,11 @@ class MojangAPI
     }
 
     /**
-     * Check if string is a valid UUID, with or without dashes
+     * Check if string is a valid UUID, with or without dashes.
      *
-     * @param  string  $string to check
-     * @return bool    Whether UUID is valid or not
+     * @param string $string to check
+     *
+     * @return bool Whether UUID is valid or not
      */
     public static function isValidUuid($string)
     {
@@ -128,10 +141,11 @@ class MojangAPI
     }
 
     /**
-     * Remove dashes from UUID
+     * Remove dashes from UUID.
      *
-     * @param  string       $uuid
-     * @return string|bool  UUID without dashes (32 chars), FALSE on failure
+     * @param string $uuid
+     *
+     * @return string|bool UUID without dashes (32 chars), FALSE on failure
      */
     public static function minifyUuid($uuid)
     {
@@ -141,72 +155,82 @@ class MojangAPI
                 return $minified;
             }
         }
+
         return false;
     }
 
     /**
-     * Add dashes to an UUID
+     * Add dashes to an UUID.
      *
-     * @param  string       $uuid
-     * @return string|bool  UUID with dashes (36 chars), FALSE on failure
+     * @param string $uuid
+     *
+     * @return string|bool UUID with dashes (36 chars), FALSE on failure
      */
     public static function formatUuid($uuid)
     {
         $uuid = static::minifyUuid($uuid);
         if (is_string($uuid)) {
             return substr($uuid, 0, 8)
-                . '-' . substr($uuid, 8, 4)
-                . '-' . substr($uuid, 12, 4)
-                . '-' . substr($uuid, 16, 4)
-                . '-' . substr($uuid, 20, 12);
+                .'-'.substr($uuid, 8, 4)
+                .'-'.substr($uuid, 12, 4)
+                .'-'.substr($uuid, 16, 4)
+                .'-'.substr($uuid, 20, 12);
         }
+
         return false;
     }
 
     /**
-     * Check if username is Alex or Steve is a valid UUID, with or without dashes
+     * Check if username is Alex or Steve is a valid UUID, with or without dashes.
      *
-     * @param  string     $uuid
-     * @return bool|null  TRUE if Alex, FALSE if Steve, NULL on error
+     * @param string $uuid
+     *
+     * @return bool|null TRUE if Alex, FALSE if Steve, NULL on error
      */
     public static function isAlex($uuid)
     {
         $uuid = static::minifyUuid($uuid);
         if (is_string($uuid)) {
-            $sub = array();
+            $sub = [];
             for ($i = 0; $i < 4; $i++) {
-                $sub[$i] = intval('0x' . substr($uuid, $i * 8, 8) + 0, 16);
+                $sub[$i] = intval('0x'.substr($uuid, $i * 8, 8) + 0, 16);
             }
+
             return (bool) ((($sub[0] ^ $sub[1]) ^ ($sub[2] ^ $sub[3])) % 2);
         }
+
         return null;
     }
 
     /**
-     * Get profile (username and UUID) from UUID
+     * Get profile (username and UUID) from UUID.
      *
      * This has a rate limit to 1 per minute per profile
      *
-     * @param  string      $uuid
-     * @return array|bool  Array with profile and properties, FALSE on failure
+     * @param string $uuid
+     *
+     * @return array|bool Array with profile and properties, FALSE on failure
      */
     public static function getSessionProfile($uuid)
     {
         if (static::isValidUuid($uuid)) {
             return static::fetchJson('https://sessionserver.mojang.com/session/minecraft/profile/'
-                . static::minifyUuid($uuid));
+                .static::minifyUuid($uuid));
         }
+
         return false;
     }
 
     /**
-     * Get textures (usually skin and cape, or empty array) from UUID
+     * Get textures (usually skin and cape, or empty array) from UUID.
      *
      * This has a rate limit to 1 per minute per profile
+     *
      * @see getSessionProfile($uuid)
      *
-     * @param  string      $uuid
-     * @return array|bool  Array with profile and properties, FALSE on failure
+     * @param string $uuid
+     *
+     * @return array|bool Array with profile and properties, FALSE on failure
      */
     public static function getTextures($uuid)
     {
@@ -225,17 +249,20 @@ class MojangAPI
                 }
             }
         }
+
         return false;
     }
 
     /**
-     * Get skin url of player
+     * Get skin url of player.
      *
      * This has a rate limit to 1 per minute per profile
+     *
      * @see getSessionProfile($uuid)
      *
-     * @param  string            $uuid
-     * @return string|null|bool  Skin url, NULL if he hasn't a skin, FALSE on failure
+     * @param string $uuid
+     *
+     * @return string|null|bool Skin url, NULL if he hasn't a skin, FALSE on failure
      */
     public static function getSkinUrl($uuid)
     {
@@ -248,19 +275,23 @@ class MojangAPI
             ) {
                 return $textures['SKIN']['url'];
             }
+
             return null;
         }
+
         return false;
     }
 
     /**
-     * Get skin (in raw png) of player
+     * Get skin (in raw png) of player.
      *
      * This has a rate limit to 1 per minute per profile
+     *
      * @see getSessionProfile($uuid)
      *
-     * @param  string            $uuid
-     * @return string|null|bool  Skin picture, NULL if he hasn't a skin, FALSE on failure
+     * @param string $uuid
+     *
+     * @return string|null|bool Skin picture, NULL if he hasn't a skin, FALSE on failure
      */
     public static function getSkin($uuid)
     {
@@ -268,18 +299,21 @@ class MojangAPI
         if (is_string($skinUrl)) {
             return static::fetch($skinUrl);
         }
+
         return $skinUrl;
     }
 
     /**
-     * Get player head (in raw png) of player
+     * Get player head (in raw png) of player.
      *
      * This has a rate limit to 1 per minute per profile
+     *
      * @see getSessionProfile($uuid)
      *
-     * @param  string            $uuid
-     * @param  int               $size in pixels
-     * @return string|null|bool  Player head, NULL if he hasn't a skin, FALSE on failure
+     * @param string $uuid
+     * @param int    $size in pixels
+     *
+     * @return string|null|bool Player head, NULL if he hasn't a skin, FALSE on failure
      */
     public static function getPlayerHead($uuid, $size = 100)
     {
@@ -287,13 +321,14 @@ class MojangAPI
         if (is_string($skin)) {
             return static::getPlayerHeadFromSkin($skin, $size);
         }
+
         return $skin;
     }
 
     /**
-     * Get Steve skin (in raw png)
+     * Get Steve skin (in raw png).
      *
-     * @return string  Steve skin
+     * @return string Steve skin
      */
     public static function getSteveSkin()
     {
@@ -320,9 +355,9 @@ class MojangAPI
     }
 
     /**
-     * Get Alex skin (in raw png)
+     * Get Alex skin (in raw png).
      *
-     * @return string  Alex skin
+     * @return string Alex skin
      */
     public static function getAlexSkin()
     {
@@ -361,9 +396,9 @@ class MojangAPI
     }
 
     /**
-     * Get Steve head (in raw png)
+     * Get Steve head (in raw png).
      *
-     * @return string  Steve head
+     * @return string Steve head
      */
     public static function getSteveHead($size = 100)
     {
@@ -371,9 +406,9 @@ class MojangAPI
     }
 
     /**
-     * Get Alex head (in raw png)
+     * Get Alex head (in raw png).
      *
-     * @return string  Alex head
+     * @return string Alex head
      */
     public static function getAlexHead($size = 100)
     {
@@ -381,11 +416,12 @@ class MojangAPI
     }
 
     /**
-     * Get player head (in raw png) from skin
+     * Get player head (in raw png) from skin.
      *
-     * @param  string       $skin returned by getSkin($uuid)
-     * @param  int          $size in pixels
-     * @return string|bool  Player head, FALSE on failure
+     * @param string $skin returned by getSkin($uuid)
+     * @param int    $size in pixels
+     *
+     * @return string|bool Player head, FALSE on failure
      */
     public static function getPlayerHeadFromSkin($skin, $size = 100)
     {
@@ -414,43 +450,45 @@ class MojangAPI
     }
 
     /**
-     * Print image from raw png
+     * Print image from raw png.
      *
      * Nothing should be displayed on the page other than this image
      *
-     * @param  string  $img
-     * @param  int     $cache in seconds, 0 to disable
+     * @param string $img
+     * @param int    $cache in seconds, 0 to disable
      */
     public static function printImage($img, $cache = 86400)
     {
         header('Content-type: image/png');
         header('Pragma: public');
-        header('Cache-Control: max-age=' . $cache);
-        header('Expires: '. gmdate('D, d M Y H:i:s \G\M\T', time() + $cache));
+        header('Cache-Control: max-age='.$cache);
+        header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + $cache));
         echo $img;
     }
 
     /**
-     * Embed image for <img> tag
+     * Embed image for <img> tag.
      *
-     * @param  string  $img
-     * @return string  embed image
+     * @param string $img
+     *
+     * @return string embed image
      */
     public static function embedImage($img)
     {
         return substr($img, 0, strlen('data:image')) === 'data:image'
             ? $img
-            : 'data:image/png;base64,' . base64_encode($img);
+            : 'data:image/png;base64,'.base64_encode($img);
     }
 
     /**
-     * Authenticate with a Minecraft account
+     * Authenticate with a Minecraft account.
      *
      * After a few fails, Mojang server will deny all requests !
      *
-     * @param  string      $id Minecraft username or Mojang email
-     * @param  string      $password Account's password
-     * @return array|bool  Array with id and name, FALSE if authentication failed
+     * @param string $id       Minecraft username or Mojang email
+     * @param string $password Account's password
+     *
+     * @return array|bool Array with id and name, FALSE if authentication failed
      */
     public static function authenticate($id, $password)
     {
@@ -460,19 +498,19 @@ class MojangAPI
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://authserver.mojang.com/authenticate');
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(array(
-            'agent' => array(
-                'name' => 'Minecraft',
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            'agent' => [
+                'name'    => 'Minecraft',
                 'version' => 1,
-            ),
+            ],
             'username' => $id,
-            'password' => $password
-        )));
+            'password' => $password,
+        ]));
 
         $output = curl_exec($ch);
         curl_close($ch);
@@ -484,24 +522,25 @@ class MojangAPI
             and array_key_exists('id', $json['selectedProfile'])
             and array_key_exists('name', $json['selectedProfile'])
         ) {
-            return array(
-                'id' => $json['selectedProfile']['id'],
-                'name' => $json['selectedProfile']['name']
-            );
+            return [
+                'id'   => $json['selectedProfile']['id'],
+                'name' => $json['selectedProfile']['name'],
+            ];
         }
 
         return false;
     }
 
     /**
-     * Query a Minecraft server
+     * Query a Minecraft server.
      *
      * @see https://github.com/xPaw/PHP-Minecraft-Query/
      *
-     * @param  string      $address Server's address
-     * @param  int         $port    Server's port, default is 25565
-     * @param  int         $timeout Timeout (in seconds), default is 2
-     * @return array|bool  Array with query result, FALSE if query failed
+     * @param string $address Server's address
+     * @param int    $port    Server's port, default is 25565
+     * @param int    $timeout Timeout (in seconds), default is 2
+     *
+     * @return array|bool Array with query result, FALSE if query failed
      */
     public static function query($address, $port = 25565, $timeout = 2)
     {
@@ -513,7 +552,7 @@ class MojangAPI
 
         // Try to connect
         $start = microtime(true);
-        $socket = @fsockopen('udp://' . $address, (int) $port, $errNo, $errStr, $timeout);
+        $socket = @fsockopen('udp://'.$address, (int) $port, $errNo, $errStr, $timeout);
         if ($errNo or $socket === false) {
             return false;
         }
@@ -530,14 +569,14 @@ class MojangAPI
 
         // And query
         $challenge = pack('N', $data);
-        $data = static::queryWriteData($socket, 0x00, $challenge . pack('c*', 0x00, 0x00, 0x00, 0x00));
+        $data = static::queryWriteData($socket, 0x00, $challenge.pack('c*', 0x00, 0x00, 0x00, 0x00));
 
         if (!$data) {
             return false;
         }
 
         $last = '';
-        $info = array();
+        $info = [];
 
         // Extract data
         $data = substr($data, 11);
@@ -550,7 +589,7 @@ class MojangAPI
         $data = explode("\x00", $data[0]);
 
         // Array with known keys in order to validate the result
-        $keys = array(
+        $keys = [
             'hostname'   => 'motd',
             'gametype'   => 'gametype',
             'version'    => 'version',
@@ -560,8 +599,8 @@ class MojangAPI
             'maxplayers' => 'maxplayers',
             'hostport'   => 'hostport',
             'hostip'     => 'hostip',
-            'game_id'    => 'gamename'
-        );
+            'game_id'    => 'gamename',
+        ];
 
         $mb_convert_encoding = function_exists('mb_convert_encoding');
         foreach ($data as $key => $value) {
@@ -583,17 +622,17 @@ class MojangAPI
         }
 
         // Ints
-        $info['players']    = intval($info['players']);
+        $info['players'] = intval($info['players']);
         $info['maxplayers'] = intval($info['maxplayers']);
-        $info['hostport']   = intval($info['hostport']);
+        $info['hostport'] = intval($info['hostport']);
 
         // Parse "plugins" if any
         if ($info['plugins']) {
-            $data = explode(": ", $info['plugins'], 2);
+            $data = explode(': ', $info['plugins'], 2);
             $info['rawplugins'] = $info['plugins'];
-            $info['software']   = $data[0];
+            $info['software'] = $data[0];
             if (count($data) == 2) {
-                $info['plugins'] = explode("; ", $data[1]);
+                $info['plugins'] = explode('; ', $data[1]);
             }
         }
 
@@ -606,18 +645,20 @@ class MojangAPI
         $info['timeout'] = microtime(true) - $start;
 
         fclose($socket);
+
         return $info;
     }
 
     /**
-     * Ping a Minecraft server
+     * Ping a Minecraft server.
      *
      * @see https://github.com/xPaw/PHP-Minecraft-Query/
      *
-     * @param  string      $address Server's address
-     * @param  int         $port    Server's port, default is 25565
-     * @param  int         $timeout Timeout (in seconds), default is 2
-     * @return array|bool  Array with query result, FALSE if query failed
+     * @param string $address Server's address
+     * @param int    $port    Server's port, default is 25565
+     * @param int    $timeout Timeout (in seconds), default is 2
+     *
+     * @return array|bool Array with query result, FALSE if query failed
      */
     public static function ping($address, $port = 25565, $timeout = 2)
     {
@@ -638,8 +679,8 @@ class MojangAPI
         stream_set_timeout($socket, $timeout);
 
         // See http://wiki.vg/Protocol (Status Ping)
-        $packet = "\x00\x04" . pack('c', strlen($address)) . $address . pack('n', $port) . "\x01";
-        $data = pack('c', strlen($packet)) . $packet;
+        $packet = "\x00\x04".pack('c', strlen($address)).$address.pack('n', $port)."\x01";
+        $data = pack('c', strlen($packet)).$packet;
 
         // Send handshake and ping
         fwrite($socket, $data);
@@ -701,22 +742,25 @@ class MojangAPI
     }
 
     /**
-     * Parse JSON
+     * Parse JSON.
      *
-     * @param  string       $json
-     * @return string|bool  json data, FALSE on failure
+     * @param string $json
+     *
+     * @return string|bool json data, FALSE on failure
      */
     private static function parseJson($json)
     {
         $data = json_decode($json, true);
+
         return empty($data) ? false : $data;
     }
 
     /**
-     * Fetch url content
+     * Fetch url content.
      *
-     * @param  string        $url
-     * @return string|false  content, FALSE on failure
+     * @param string $url
+     *
+     * @return string|false content, FALSE on failure
      */
     private static function fetch($url)
     {
@@ -741,10 +785,11 @@ class MojangAPI
     }
 
     /**
-     * Fetch url content as JSON
+     * Fetch url content as JSON.
      *
-     * @param  string       $url
-     * @return array|false  json data, FALSE on failure
+     * @param string $url
+     *
+     * @return array|false json data, FALSE on failure
      */
     private static function fetchJson($url)
     {
@@ -761,17 +806,18 @@ class MojangAPI
     }
 
     /**
-     * Write data in a socket for query
+     * Write data in a socket for query.
      *
-     * @param  socket        $socket
-     * @param  string        $command
-     * @param  string        $append, default is ''
-     * @return string|false  data, FALSE on failure
+     * @param socket $socket
+     * @param string $command
+     * @param string $append, default is ''
+     *
+     * @return string|false data, FALSE on failure
      */
     private static function queryWriteData($socket, $command, $append = '')
     {
-        $command = pack('c*', 0xFE, 0xFD, $command, 0x01, 0x02, 0x03, 0x04) . $append;
-        $length  = strlen($command);
+        $command = pack('c*', 0xFE, 0xFD, $command, 0x01, 0x02, 0x03, 0x04).$append;
+        $length = strlen($command);
 
         if ($length !== fwrite($socket, $command, $length)) {
             return false;
@@ -786,9 +832,10 @@ class MojangAPI
     }
 
     /**
-     * Read var int in a socket for ping
+     * Read var int in a socket for ping.
      *
-     * @param  socket    $socket
+     * @param socket $socket
+     *
      * @return int|false var int, FALSE on failure
      */
     private static function pingReadVarInt($socket)
