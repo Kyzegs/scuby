@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta property="description" content="Ever wondered how many pesky Enderman you've slain? Or perhaps how much time you've wasted swimming when you could've used a boat? No? Neither have I. But if you do wonder about your statistics by the odd chance, you'll be able to see them on this website. Not satisfied with just that? We also have a map of the server that updates real-time. You'll be able to stalk all of your fellow Minecraft players.">
 <meta property="og:description" content="Ever wondered how many pesky Enderman you've slain? Or perhaps how much time you've wasted swimming when you could've used a boat? No? Neither have I. But if you do wonder about your statistics by the odd chance, you'll be able to see them on this website. Not satisfied with just that? We also have a map of the server that updates real-time. You'll be able to stalk all of your fellow Minecraft players.">
-<meta property="og:image" content="https://84159.ict-lab.nl/MC/images/header.png">
+<meta property="og:image" content="/images/header.png">
 <meta property="og:site_name" content="Scuby">
 <meta property="og:title" content="Scuby, a hardcore Minecraft server">
 <meta property="og:type" content="website">

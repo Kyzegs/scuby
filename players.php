@@ -5,7 +5,7 @@ require_once('includes/mojang-api.php');
 <html lang="en">
 <head>
     <?php require_once('includes/head.php'); ?>
-    <title>Home</title>
+    <title>Players</title>
 </head>
 <body>
     <div id="wrapper">
