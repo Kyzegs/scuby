@@ -5,7 +5,7 @@ if (!$_GET['uuid'] || !file_exists(sprintf('stats/%s.json', $_GET['uuid']))) {
 }
 
 session_start();
-require_once 'includes/mojang-api.php';
+require_once 'includes/mojang.php';
 
 $uuid = $_GET['uuid'];
 $stats = json_decode(file_get_contents(sprintf('stats/%s.json', $uuid)), true)['stats'];
@@ -23,7 +23,9 @@ $categories = [
 <html lang="en">
 <head>
     <?php require_once 'includes/head.php'; ?>
-    <title><?= end(MojangAPI::getNameHistory($uuid))['name']; ?></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/94/three.min.js" integrity="sha256-NGC9JEuTWN4GhTj091wctgjzftr+8WNDmw0H8J5YPYE=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/gh/InventivetalentDev/MineRender@1.2.3/dist/skin.min.js"></script>
+    <title><?= Mojang::getUsername($uuid) ?></title>
 </head>
 <body>
     <div id="wrapper">

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'includes/mojang-api.php';
+require_once 'includes/mojang.php';
 ?>
 <html lang="en">
 <head>
@@ -31,17 +31,10 @@ require_once 'includes/mojang-api.php';
                 <?php
                 foreach (glob('stats/*.json') as $filename) {
                     $uuid = str_replace(['stats/', '.json'], '', $filename);
-                    $username = end(MojangAPI::getNameHistory($uuid))['name'];
-
-                    $player_head = MojangAPI::embedImage(MojangAPI::getPlayerHead($uuid));
-                    if ($player_head != 'data:image/png;base64,') {
-                        $_SESSION['player_heads'][$username] = $player_head;
-                    } else {
-                        $player_head = $_SESSION['player_heads'][$username];
-                    }
+                    $username = Mojang::getUsername($uuid);
 
                     echo "<a class=\"player-card\" href=\"player.php?uuid=$uuid\">
-                            <img src=\"$player_head\" alt=\"\">
+                            <img src=\"https://cravatar.eu/helmhead/$uuid\">
                             $username
                         </a>";
                 }

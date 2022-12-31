@@ -1,0 +1,6 @@
+{
+    "name": "kyzegs/scuby",
+    "require": {
+        "guzzlehttp/guzzle": "^7.5"
+    }
+}
