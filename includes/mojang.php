@@ -20,7 +20,7 @@ class Mojang
         }
 
         $client = new \GuzzleHttp\Client();
-        $response = $client->request('GET', sprintf('https://api.ashcon.app/mojang/v2/user/%s', $uuid));
+        $response = $client->request('GET', sprintf('https://sessionserver.mojang.com/session/minecraft/profile/%s', $uuid));
 
         self::$users[$uuid] = json_decode($response->getBody()->getContents(), true);
     }
@@ -33,6 +33,6 @@ class Mojang
     {
         static::getUser($uuid);
 
-        return self::$users[$uuid]['username'];
+        return self::$users[$uuid]['name'];
     }
 }
